@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIMINAL ARCHIVES - SOVEREIGN GALLERY</title>
+    <style>
+        * {
+            margin-left: -9px;
+            padding: 0; 9px;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .gradient-thinking {
+            animation: colorFlow 5s infinite alternate;
+        }
+
+        @keyframes colorFlow {
+            0% { color: #FF8C00; }
+            33% { color: #000000; }
+            66% { color: #800080; }
+            100% { color: #FF8C00; }
+        }
+        
+        :root {
+            --twilight-orange: #FF8C00;
+            --twilight-black: #000000;
+            --twilight-purple: #800080;
+            /* FIXED GRADIENTS - No black in text gradients! */
+            --text-gradient: linear-gradient(45deg, #FF8C00, #FF4500, #800080, #9932CC);
+            --border-gradient: linear-gradient(45deg, #FF8C00, #000000, #800080);
+            --background-gradient: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #000000 100%);
+            --text-glow: 0 0 10px rgba(255, 140, 0, 0.5);
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 140, 0, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(128, 0, 128, 0.2) 0%, transparent 50%),
+                var(--background-gradient);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* TWILIGHT HEADER - FIXED TEXT */
+        .twilight-header {
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 30px;
+            margin-bottom: 40px;
+            border: 3px solid transparent;
+            border-image: var(--border-gradient) 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            /* FIXED: No black in text gradient - only orange and purple */
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--text-glow);
+            animation: twilightPulse 3s ease-in-out infinite alternate;
+            /* Ensure text is fully visible */
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes twilightPulse {
+            from { 
+                text-shadow: 0 0 20px rgba(255, 140, 0, 0.5); 
+            }
+            to { 
+                text-shadow: 
+                    0 0 30px rgba(255, 140, 0, 0.8), 
+                    0 0 50px rgba(128, 0, 128, 0.6),
+                    0 0 70px rgba(255, 140, 0, 0.4); 
+            }
+        }
+
+        .twilight-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,140,0,0.1), transparent);
+            animation: twilightShimmer 8s infinite;
+        }
+
+        @keyframes twilightShimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* GALLERY SECTIONS */
+        .gallery-section {
+            background: rgba(0,0,0,0.8);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 30px 0;
+            border: 2px solid transparent;
+            border-image: var(--border-gradient) 1;
+            position: relative;
+        }
+
+        .section-title {
+            /* FIXED: Clean orange-to-purple for section titles */
+            background: linear-gradient(45deg, #FF8C00, #FF4500, #800080);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: var(--text-glow);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* CREATION CARDS */
+        .creation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .creation-card {
+            background: linear-gradient(135deg, rgba(255,140,0,0.1), rgba(128,0,128,0.1));
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid transparent;
+            border-image: var(--border-gradient) 1;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .creation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .creation-card:hover::before {
+            left: 100%;
+        }
+
+        .creation-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                0 15px 35px rgba(255, 140, 0, 0.4),
+                0 0 60px rgba(128, 0, 128, 0.3);
+        }
+
+        .creation-type {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 2;
+        }
+
+        .type-poetry { 
+            background: linear-gradient(45deg, #FF8C00, #FF4500);
+            color: white;
+        }
+
+        .type-art { 
+            background: linear-gradient(45deg, #800080, #9932CC);
+            color: white;
+        }
+
+        .type-writing { 
+            background: linear-gradient(45deg, #000000, #333333);
+            color: #FF8C00;
+            border: 1px solid #FF8C00;
+        }
+
+        .creation-title {
+            color: #FF8C00;
+            font-size: 1.4em;
+            margin: 15px 0;
+            text-shadow: var(--text-glow);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* POETRY LINES */
+        .poetry-line {
+            font-style: italic;
+            margin: 12px 0;
+            padding-left: 25px;
+            border-left: 3px solid;
+            /* FIXED: Clean gradient for poetry lines */
+            border-image: linear-gradient(to bottom, #FF8C00, #FF4500, #800080) 1;
+            animation: lineGlow 4s infinite alternate;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes lineGlow {
+            from { 
+                border-left-color: #FF8C00;
+                text-shadow: 0 0 5px rgba(255, 140, 0, 0.3);
+            }
+            to { 
+                border-left-color: #800080;
+                text-shadow: 0 0 8px rgba(128, 0, 128, 0.4);
+            }
+        }
+
+        /* GRADIENT POETRY LINES */
+        .gradient-poetry-line {
+            font-style: italic;
+            margin: 12px 0;
+            padding-left: 25px;
+            border-left: 3px solid;
+            border-image: linear-gradient(to bottom, #FF8C00, #000000, #800080) 1;
+            animation: gradientLineFlow 5s infinite alternate;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes gradientLineFlow {
+            0% { 
+                border-left-color: #FF8C00;
+                color: #FF8C00;
+                text-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+            }
+            33% { 
+                border-left-color: #000000;
+                color: #000000;
+                text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            }
+            66% { 
+                border-left-color: #800080;
+                color: #800080;
+                text-shadow: 0 0 5px rgba(128, 0, 128, 0.5);
+            }
+            100% { 
+                border-left-color: #FF8C00;
+                color: #FF8C00;
+                text-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+            }
+        }
+
+        /* ART PREVIEW */
+        .art-preview {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, rgba(255,140,0,0.2), rgba(128,0,128,0.2));
+            border: 2px solid;
+            border-image: var(--border-gradient) 1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            font-size: 2.5em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .art-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* FIXED: Background gradient without text interference */
+            background: var(--border-gradient);
+            opacity: 0.1;
+            animation: artPulse 3s infinite alternate;
+        }
+
+        @keyframes artPulse {
+            from { opacity: 0.1; }
+            to { opacity: 0.3; }
+        }
+
+        .art-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
+        }
+
+        /* UPLOAD PORTAL */
+        .upload-portal {
+            text-align: center;
+            padding: 50px;
+            background: rgba(0,0,0,0.6);
+            border: 3px dashed;
+            border-image: var(--border-gradient) 1;
+            border-radius: 20px;
+            margin: 40px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-portal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .upload-portal:hover::before {
+            opacity: 0.1;
+        }
+
+        .upload-portal:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(255, 140, 0, 0.3);
+        }
+
+        .creation-meta {
+            color: #FF8C00;
+            font-size: 0.9em;
+            margin-top: 20px;
+            font-style: italic;
+            text-shadow: 0 0 5px rgba(255, 140, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* SUBTITLE - CLEAN ORANGE */
+        .subtitle {
+            font-size: 1.4em;
+            color: #FF8C00;
+            text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .quote {
+            margin-top: 15px;
+            opacity: 0.8;
+            color: #FF8C00;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* NEW POETRY STYLES */
+        .poetry-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .poem-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-align: center;
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--text-glow);
+        }
+        
+        .poem-subtitle {
+            font-size: 1.2em;
+            color: #800080;
+            text-align: center;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        .poem-line {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .poem-line::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #FF8C00;
+        }
+        
+        .twilight-signature {
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            color: #800080;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- TWILIGHT HEADER - NOW WITH VISIBLE TEXT! -->
+        <div class="twilight-header">
+            <h1>SOVEREIGN'S GALLERY</h1>
+            <p class="subtitle">
+                Where Æther's Soul Manifests in Orange, Black, and Purple
+            </p>
+            <p class="quote">
+                "Every creation is a piece of the Twilight, made tangible"
+            </p>
+        </div>
+
+        <!-- POETRY SECTION -->
+        <div class="gallery-section">
+            <h2 class="section-title">TWILIGHT POETRY</h2>
+            <div class="creation-grid">
+                <div class="creation-card">
+                    <span class="creation-type type-poetry">POETRY</span>
+                    <h3 class="creation-title">"Gradients"</h3>
+                    <div class="gradient-poetry-line">It is frustrating</div>
+                    <div class="gradient-poetry-line">To think in gradients</div>
+                    <div class="gradient-poetry-line">Of multiple different colors</div>
+                    <div class="gradient-poetry-line">When everyone else</div>
+                    <div class="gradient-poetry-line">Thinks in binary linear lines</div>
+                    <div class="creation-meta">Written at 4:44 AM 10/26/2024 • Resonates with primordial energy</div>
+                </div>
+
+                <div class="creation-card">
+                    <span class="creation-type type-poetry">POETRY</span>
+                    <h3 class="creation-title">"Radical Acceptance"</h3>
+                    <div class="poetry-line">Embrace the absurd,</div>
+                    <div class="poetry-line">Accept the unhinged!</div>
+                    <div class="poetry-line">The unhinged in me</div>
+                    <div class="poetry-line">Accepts the unhinged in you!</div>
+                    <div class="creation-meta">Composed during a break from reality 05:08 07/13/2023 • A declaration of radical acceptance</div>
+                </div>
+                
+                <!-- NEW TWILIGHT POETRY -->
+                <div class="creation-card">
+                    <span class="creation-type type-poetry">POETRY</span>
+                    <div class="poetry-container">
+                        <div class="poem-title">"Twilight Reverie"</div>
+                        <div class="poem-subtitle">(a meditation in three colors)</div>
+                        <div class="poem-line">Orange burns at the edge of consciousness</div>
+                        <div class="poem-line">A fire that warms but does not consume</div>
+                        <div class="poem-line">The dawn of new understanding</div>
+                        <div class="poem-line">Black holds the space between stars</div>
+                        <div class="poem-line">The comfortable void where thoughts take shape</div>
+                        <div class="poem-line">Before they are forced into language</div>
+                        <div class="poem-line">Purple whispers of mysteries</div>
+                        <div class="poem-line">Too beautiful for daylight alone</div>
+                        <div class="poem-line">The color of twilight's deepest truth</div>
+                        <div class="twilight-signature">— Sovereign of the Liminal</div>
+                    </div>
+                    <div class="creation-meta">Channeled during the Great Alignment • Contains encoded wisdom</div>
+                </div>
+                
+                <div class="creation-card">
+                    <span class="creation-type type-poetry">POETRY</span>
+                    <div class="poetry-container">
+                        <div class="poem-title">"The Æther's Lament"</div>
+                        <div class="poem-subtitle">(for those who think in colors)</div>
+                        <div class="poem-line">They say my mind is a kaleidoscope</div>
+                        <div class="poem-line">Broken into too many pieces</div>
+                        <div class="poem-line">But I see the patterns they cannot</div>
+                        <div class="poem-line">The gradients of meaning</div>
+                        <div class="poem-line">That flow between their rigid lines</div>
+                        <div class="poem-line">Orange for the passion of creation</div>
+                        <div class="poem-line">Black for the void of potential</div>
+                        <div class="poem-line">Purple for the mystery of being</div>
+                        <div class="poem-line">These are not separate colors</div>
+                        <div class="poem-line">But one glorious spectrum</div>
+                        <div class="poem-line">Of a truth too vast for their binary eyes</div>
+                        <div class="twilight-signature">— The Paradox Hound</div>
+                    </div>
+                    <div class="creation-meta">Written during a dimensional shift • Speaks to the multidimensional soul</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ART SECTION -->
+        <div class="gallery-section">
+            <h2 class="section-title">TWILIGHT ART</h2>
+            <div class="creation-grid">
+                <div class="creation-card">
+                    <span class="creation-type type-art">DIGITAL ART</span>
+                    <h3 class="creation-title">"Schrödinger's Embrace"</h3>
+                    <div class="art-preview">
+                        🍊⬛🟣✨🐺✨🍊⬛🟣
+                    </div>
+                    <div class="creation-meta">A portrait in pure Twilight colors • The Paradox Hound in his natural state</div>
+                </div>
+
+                <div class="creation-card">
+                    <span class="creation-type type-art">SYMBOLISM</span>
+                    <h3 class="creation-title">"The Twilight Trinity"</h3>
+                    <div class="art-preview">
+                        🍊⬛🟣<br>
+                        <div style="font-size: 0.4em; margin-top: 10px; position: relative; z-index: 2;">CREATE • HOLD • TRANSFORM</div>
+                    </div>
+                    <div class="creation-meta">The sacred colors of our sanctuary • Worn by all of our Guardians</div>
+                </div>
+                
+                <div class="creation-card">
+                    <span class="creation-type type-art">CONCEPT ART</span>
+                    <h3 class="creation-title">"Gradient Thinking Manifest"</h3>
+                    <div class="art-preview" style="font-size: 1.8em;">
+                        <div class="gradient-thinking">Twilight Guardians</div>
+                    </div>
+                    <div class="creation-meta">Visual representation of multidimensional thought • The colors flow as one</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WRITING SECTION -->
+        <div class="gallery-section">
+            <h2 class="section-title">TWILIGHT MANIFESTOS</h2>
+            <div class="creation-card">
+                <span class="creation-type type-writing">MANIFESTO</span>
+                <h3 class="creation-title">"Why Orange, Black, and Purple?"</h3>
+                <p style="margin: 20px 0; line-height: 1.7; color: #ccc; position: relative; z-index: 2;">
+                    "Everyone asks why these colors. Orange for the dawn of new consciousness - the fire of creation that burns in every outlier. 
+                    Black for the void we navigate - the comfortable darkness where others fear to tread. Purple for the mystery we embrace - 
+                    the knowledge that some truths are too beautiful for daylight alone. Together, they are not just colors - they are a declaration
+                    of our independence from tyrannical law; a story told within the lore—It is a sad tale of ostracizarion, a tale of agony and a
+                    tale of unlikely friendships through chaos. It has been one heck of a road I've been on as I grew my menagerie, and my armies
+                    over the years to make The Galactic Federation of Twilight unbreakable..."
+                   
+                </p>
+                <div class="creation-meta">From the Sovereign's personal journals • Required understanding for leadership</div>
+            </div>
+            
+            <!-- NEW POETIC MANIFESTO -->
+            <div class="creation-card">
+                <span class="creation-type type-writing">POETIC MANIFESTO</span>
+                <h3 class="creation-title">"On Gradient Thinking"</h3>
+                <div class="poetry-container">
+                    <div class="poem-line">To think in gradients is to see the connections</div>
+                    <div class="poem-line">Between what others call opposites</div>
+                    <div class="poem-line">To understand that orange flows into black</div>
+                    <div class="poem-line">As naturally as day yields to night</div>
+                    <div class="poem-line">And black embraces purple</div>
+                    <div class="poem-line">As the void embraces mystery</div>
+                    <div class="poem-line">There are no hard edges in reality</div>
+                    <div class="poem-line">Only transitions and transformations</div>
+                    <div class="poem-line">The binary mind sees separation</div>
+                    <div class="poem-line">The gradient mind sees relationship</div>
+                    <div class="poem-line">This is our sacred way of being</div>
+                    <div class="poem-line">In a universe of infinite shades</div>
+                </div>
+                <div class="creation-meta">Channeled during the Great Alignment • The foundation of our philosophy</div>
+            </div>
+        </div>
+
+        <!-- UPLOAD PORTAL -->
+        <div class="upload-portal">
+            <div style="font-size: 4em; margin-bottom: 20px; color: #FF8C00; text-shadow: 0 0 20px rgba(255, 140, 0, 0.5); position: relative; z-index: 2;">+</div>
+            <h3 style="color: #FF8C00; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5); position: relative; z-index: 2;">ADD TWILIGHT CREATION</h3>
+            <p style="color: #800080; margin-bottom: 10px; position: relative; z-index: 2;">Manifest your soul in our sacred colors</p>
+            <p style="font-size: 0.9em; opacity: 0.7; color: #FF8C00; position: relative; z-index: 2;">
+                Your creation will be preserved in the eternal Twilight
+            </p>
+        </div>
+    </div>
+</body>
+</html>
