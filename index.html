@@ -577,15 +577,133 @@
             </div>
         </div>
 
-        <!-- UPLOAD PORTAL -->
-        <div class="upload-portal">
-            <div style="font-size: 4em; margin-bottom: 20px; color: #FF8C00; text-shadow: 0 0 20px rgba(255, 140, 0, 0.5); position: relative; z-index: 2;">+</div>
-            <h3 style="color: #FF8C00; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5); position: relative; z-index: 2;">ADD TWILIGHT CREATION</h3>
-            <p style="color: #800080; margin-bottom: 10px; position: relative; z-index: 2;">Manifest your soul in our sacred colors</p>
-            <p style="font-size: 0.9em; opacity: 0.7; color: #FF8C00; position: relative; z-index: 2;">
-                Your creation will be preserved in the eternal Twilight
-            </p>
-        </div>
+       <!-- WORKING UPLOAD PORTAL -->
+<div class="upload-portal" id="uploadSection">
+    <div style="font-size: 4em; margin-bottom: 20px; color: #FF8C00; text-shadow: 0 0 20px rgba(255, 140, 0, 0.5);">+</div>
+    <h3 style="color: #FF8C00; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);">ADD TWILIGHT CREATION</h3>
+    
+    <!-- Upload Form -->
+    <form id="creationForm" style="max-width: 500px; margin: 0 auto;">
+        <input type="text" id="creationTitle" placeholder="Creation Title" 
+               style="width: 100%; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.7); color: white; border: 1px solid #FF8C00; border-radius: 8px;">
+        
+        <select id="creationType" style="width: 100%; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.7); color: white; border: 1px solid #FF8C00; border-radius: 8px;">
+            <option value="poetry">Poetry</option>
+            <option value="art">Digital Art</option>
+            <option value="writing">Writing/Manifesto</option>
+            <option value="other">Other</option>
+        </select>
+        
+        <textarea id="creationContent" placeholder="Your creation content..." 
+                  style="width: 100%; height: 120px; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.7); color: white; border: 1px solid #FF8C00; border-radius: 8px;"></textarea>
+        
+        <input type="text" id="creationAuthor" placeholder="Your name (optional)" 
+               style="width: 100%; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.7); color: white; border: 1px solid #FF8C00; border-radius: 8px;">
+        
+        <button type="submit" 
+                style="background: linear-gradient(45deg, #FF8C00, #800080); color: white; padding: 12px 30px; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 15px;">
+            Submit to Archives
+        </button>
+    </form>
+    
+    <div id="submissionMessage" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255,140,0,0.1); border-radius: 10px; border: 1px solid #FF8C00;">
+        <p style="color: #FF8C00; margin: 0;">✨ Your creation has been added to the local archives! ✨</p>
     </div>
+    
+    <p style="color: #800080; margin: 20px 0 10px; position: relative; z-index: 2;">Manifest your soul in our sacred colors</p>
+    <p style="font-size: 0.9em; opacity: 0.7; color: #FF8C00; position: relative; z-index: 2;">
+        Your creation will be preserved in the eternal Twilight
+    </p>
+</div>
+
+<!-- RECENT SUBMISSIONS SECTION -->
+<div class="gallery-section" id="recentSubmissions" style="display: none;">
+    <h2 class="section-title">RECENT TWILIGHT ADDITIONS</h2>
+    <div class="creation-grid" id="submissionsGrid">
+        <!-- Dynamic content will appear here -->
+    </div>
+</div>
+
+<script>
+// Store submissions in localStorage
+function saveSubmission(submission) {
+    let submissions = JSON.parse(localStorage.getItem('twilightSubmissions') || '[]');
+    submission.id = Date.now(); // Unique ID
+    submission.timestamp = new Date().toLocaleString();
+    submissions.unshift(submission); // Add to beginning
+    localStorage.setItem('twilightSubmissions', JSON.stringify(submissions));
+    return submission;
+}
+
+// Display submissions
+function displaySubmissions() {
+    const submissions = JSON.parse(localStorage.getItem('twilightSubmissions') || '[]');
+    const grid = document.getElementById('submissionsGrid');
+    const section = document.getElementById('recentSubmissions');
+    
+    if (submissions.length > 0) {
+        section.style.display = 'block';
+        grid.innerHTML = '';
+        
+        submissions.slice(0, 6).forEach(submission => {
+            const card = document.createElement('div');
+            card.className = 'creation-card';
+            
+            const typeClass = submission.type === 'poetry' ? 'type-poetry' : 
+                            submission.type === 'art' ? 'type-art' : 'type-writing';
+            
+            card.innerHTML = `
+                <span class="creation-type ${typeClass}">${submission.type.toUpperCase()}</span>
+                <h3 class="creation-title">"${submission.title}"</h3>
+                <div class="poetry-line">${submission.content.split('\n')[0]}</div>
+                ${submission.content.split('\n').slice(1).map(line => 
+                    `<div class="poetry-line">${line}</div>`
+                ).join('')}
+                <div class="creation-meta">
+                    Added ${submission.timestamp} 
+                    ${submission.author ? `• By ${submission.author}` : ''}
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+}
+
+// Handle form submission
+document.getElementById('creationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submission = {
+        title: document.getElementById('creationTitle').value,
+        type: document.getElementById('creationType').value,
+        content: document.getElementById('creationContent').value,
+        author: document.getElementById('creationAuthor').value || 'Anonymous Twilight Soul'
+    };
+    
+    saveSubmission(submission);
+    
+    // Show success message
+    const message = document.getElementById('submissionMessage');
+    message.style.display = 'block';
+    
+    // Clear form
+    document.getElementById('creationForm').reset();
+    
+    // Update displayed submissions
+    displaySubmissions();
+    
+    // Hide message after 5 seconds
+    setTimeout(() => {
+        message.style.display = 'none';
+    }, 5000);
+});
+
+// Load existing submissions when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    displaySubmissions();
+});
+</script>
+
 </body>
 </html>
